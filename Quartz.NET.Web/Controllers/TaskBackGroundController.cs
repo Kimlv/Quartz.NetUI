@@ -4,6 +4,7 @@ using Quartz.NET.Web.Database;
 using Quartz.NET.Web.Extensions;
 using Quartz.NET.Web.Models;
 using Quartz.NET.Web.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,7 +77,12 @@ namespace Quartz.NET.Web.Controllers
         [TaskAuthor]
         public async Task<IActionResult> Remove(TaskOptions taskOptions)
         {
-            //TODO:从数据库中逻辑删除
+            var model = taskOptions.ApiUrl.Split('=')[1].Trim();
+            var token = _context.Set<ViewTokens>().Where(item => item.ModelId == model)?.FirstOrDefault();
+            token.UpdateTime = DateTime.Now;
+            token.IsActive = false;
+            _context.Set<ViewTokens>().Update(token);
+            _context.SaveChanges();
             return Json(await _schedulerFactory.Remove(taskOptions));
         }
         [TaskAuthor]
