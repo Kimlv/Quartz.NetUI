@@ -28,7 +28,7 @@ var $taskVue = new Vue({
         modelMessage: '任务管理',
         activedIndex: 0,
         taskValidate: {
-            taskName: '', groupName: '', interval: '', apiUrl: '', authKey: '', authValue:
+            id: '', taskName: '', groupName: '', interval: '', apiUrl: '', authKey: '', authValue:
                 '', describe: '', requestType: ''
         },
         ruleValidate: {
@@ -50,18 +50,22 @@ var $taskVue = new Vue({
         ],
         columns: [
             {
+                hidden: true,
+                key: "id"
+            },
+            {
                 type: 'selection',
-                width: 60,
+                width: 50,
                 align: 'center'
             },
             {
                 title: '作业名称',
                 key: 'taskName',
-                width: 150
+                width: 160
             }, {
                 title: '分组',
                 key: 'groupName',
-                width: 120
+                width: 100
             },
             {
                 title: '最后执行时间',
@@ -70,15 +74,15 @@ var $taskVue = new Vue({
             }, {
                 title: '间隔(Cron)',
                 key: 'interval',
-                width: 140
+                width: 150
             },
             {
                 title: '状态',
                 key: 'status',
                 width: 80,
                 render: (h, params) => {
-                    var style = { color: 'white', background: 'red', padding: '3px 10px', borderRadius: '4px' };
-                    var text = '';
+                    let style = { color: 'white', background: 'red', padding: '3px 10px', borderRadius: '4px' };
+                    let text = '';
                     switch (params.row.status) {
                         case 0:
                             style.background = '#0acb0a';
@@ -126,17 +130,44 @@ var $taskVue = new Vue({
             {
                 title: '描述',
                 key: 'describe',
-                minWidth:200
+                minWidth: 120,
+                width: 150
             },
             {
                 title: 'ApiUrl',
-                key: 'apiUrl',
-                width: 180
+                key: 'apiUrl'
             },
             {
                 title: '请求方式',
                 key: 'requestType',
-                width: 95
+                width: 95,
+                render: (h, params) => {
+                    let style = { color: 'white', background: 'red', padding: '3px 10px', borderRadius: '4px' };
+                    let text = '';
+                    switch (params.row.requestType) {
+                        case "get":
+                            style.background = '#607D8B';
+                            text = "GET";
+                            break;
+                        case "post":
+                            style.background = '#fc2f2f';
+                            text = "POST";
+                            break;
+                        default:
+                            break;
+                    };
+                    return h('div', [
+                        h('Button', {
+                            props: {
+                                size: 'small'
+                            }, style: style,
+                            on: {
+                                click: function () {
+                                }
+                            }
+                        }, text)
+                    ]);
+                }
             },
             {
                 title: '操作',
@@ -148,9 +179,7 @@ var $taskVue = new Vue({
                     return h('div', [
                         h('i-button', {
                             props: {
-                                //type: 'error',
                                 size: 'small'
-
                             }, style: style,
                             on: {
                                 click: function () {
@@ -164,6 +193,15 @@ var $taskVue = new Vue({
         ],
         rows: []
     }, methods: {
+        getColumns: function () {
+            var columns = [];
+            this.columns.forEach(function (item) {
+                if (!item.hidden) {
+                    columns.push(item);
+                }
+            });
+            return columns;
+        },
         selectRow: function (selection, row) {
             this.select.currentRow = row;
             this.select.rows = selection;
@@ -179,17 +217,13 @@ var $taskVue = new Vue({
         },
         getJobRunLog: function (params, next) {
             if (!next) {
-                //if (!(params.row.taskName === $taskVue.log.title
-                //    && params.row.groupName === $taskVue.log.groupName)) {
                 $taskVue.log.page = 0;
                 $taskVue.log.index = 0;
                 $taskVue.log.title = params.row.taskName;
                 $taskVue.log.groupName = params.row.groupName;
                 $taskVue.log.data = [];
-                //  }
             }
             $taskVue.log.model = true;
-            //  $taskVue.log.spin = true;
             $taskVue.log.page++;
             $taskVue.ajax("/TaskBackGround/GetRunLog", {
                 taskName: $taskVue.log.title, groupName: $taskVue.log.groupName, page: $taskVue.log.page
@@ -203,14 +237,12 @@ var $taskVue = new Vue({
                     }
                     return;
                 }
-                //  $taskVue.log.spin = false;
                 if (next) {
                     $taskVue.log.data = data;
-                    // $taskVue.log.data.push(...data);
                 } else {
                     $taskVue.log.data = data;
                 }
-                $taskVue.log.index += $taskVue.log.index ? data.length: 1;
+                $taskVue.log.index += $taskVue.log.index ? data.length : 1;
             });
         },
         getTaskValidate: function () {
@@ -221,6 +253,9 @@ var $taskVue = new Vue({
             }
             this.setFormClass(false);
             this.model = true;
+        },
+        copy: function () {
+            alert(JSON.stringify(this.select.rows[0]));
         },
         tiggerAction: function (action) {
             if (!this.select.rows.length)
@@ -234,16 +269,13 @@ var $taskVue = new Vue({
                 });
         },
         update: function () {
-            //   this.tiggerAction('update');
             if (!this.select.rows.length)
                 return $taskVue.$Message.success('请选择作业!');
             this.model = true;
-            //this.taskValidate = this.select.rows.slice(0, 1)[0];
             for (var key in this.select.rows[0]) {
                 this.taskValidate[key] = this.select.rows[0][key];
             }
             this.setFormClass(true);
-            //this.taskForm[0]
         },
         refresh: function (_init) {
             this.select.currentRow = [];
@@ -266,7 +298,7 @@ var $taskVue = new Vue({
                 if (!valid) {
                     return this.$Message.error('数据填写不完整!');
                 }
-                this.ajax("/TaskBackGround/" + (this.isAdd ? 'add' : 'update'), this.taskValidate, function (data) {
+                this.ajax("/TaskBackGround/" + (this.isAdd ? 'AddAsyn' : 'UpdateAsyn'), this.taskValidate, function (data) {
                     $taskVue.$Message.success(data.msg || '保存成功');
                     if (data.status) {
                         $taskVue.model = false;
@@ -290,13 +322,13 @@ var $taskVue = new Vue({
                 method: 'post',
                 url: url,
                 params: params,
-                headers: { 'X-Requested-With':'XMLHttpRequest'}
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             }).then(function (response) {
                 fun && fun(response.data);
-                }).catch(function (error) {
-                    if (error.response.status === 401) {
-                        return window.location.href = '/home/index';
-                    }
+            }).catch(function (error) {
+                if (error.response.status === 401) {
+                    return window.location.href = '/home/index';
+                }
                 $taskVue.$Message.success('出错啦!');
                 console.log(error);
             });
@@ -304,6 +336,6 @@ var $taskVue = new Vue({
     }, created: function () {
         this.refresh(true);
     }, mounted: function () {
-        //$headerVue.activedIndex = 0;
+        
     }
 });

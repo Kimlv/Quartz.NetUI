@@ -23,7 +23,9 @@ namespace Quartz.NET.Web.Utility
         public static string CreateQuartzRootPath(IHostingEnvironment env)
         {
             if (!string.IsNullOrEmpty(_rootPath))
+            {
                 return _rootPath;
+            }
             _rootPath = $"{Directory.GetParent(env.ContentRootPath).FullName}\\{QuartzFileInfo.QuartzSettingsFolder}\\";
             _rootPath = _rootPath.ReplacePath();
             if (!Directory.Exists(_rootPath))
@@ -56,6 +58,7 @@ namespace Quartz.NET.Web.Utility
 
         public static List<TaskLog> GetJobRunLog(string taskName, string groupName, int page, int pageSize = 100)
         {
+            //TODO:从数据库获取作业执行结果
             string path = $"{_logPath}{groupName}\\{taskName}.txt";
             List<TaskLog> list = new List<TaskLog>();
 
@@ -87,6 +90,7 @@ namespace Quartz.NET.Web.Utility
 
         public static void WriteStartLog(string content)
         {
+            //TODO:向数据库写入启停信息日志
             content = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "," + content;
             if (!content.EndsWith("\r\n"))
             {
@@ -100,18 +104,21 @@ namespace Quartz.NET.Web.Utility
         }
         public static void WriteJobAction(JobAction jobAction, string taskName, string groupName, string content = null)
         {
+            //TODO:向数据库写入作业执行状态
             content = $"{jobAction.ToString()} --  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  --分组：{groupName},作业：{taskName},消息:{content ?? "OK"}\r\n";
             FileHelper.WriteFile(FileQuartz.LogPath, "action.txt", content, true);
         }
 
         public static void WriteAccess(string content = null)
         {
+            //TODO:向数据库写入请求日志
             content = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}_{content}\r\n";
             FileHelper.WriteFile(FileQuartz.LogPath, "access.txt", content, true);
         }
 
-        public static string GetAccessLog(int pageSize=1)
+        public static string GetAccessLog(int pageSize = 1)
         {
+            //TODO:从数据库获取请求日志
             string path = FileQuartz.LogPath + "access.txt";
             path = path.ReplacePath();
             if (!File.Exists(path))

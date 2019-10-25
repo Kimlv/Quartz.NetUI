@@ -4,6 +4,7 @@ namespace Quartz.NET.Web.Models
 {
     public class TaskOptions
     {
+        public string Id { get; set; }
         public string TaskName { get; set; }
         public string GroupName { get; set; }
         public string Interval { get; set; }

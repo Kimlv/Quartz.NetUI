@@ -30,7 +30,7 @@ namespace Quartz.NET.Web.Filters
                 return;
             if (((ControllerActionDescriptor)context.ActionDescriptor).MethodInfo
                 .CustomAttributes.Any(x => x.AttributeType == typeof(TaskAuthorAttribute))
-                && !_memoryCache.Get<bool>("isSuperToken"))
+                && !_memoryCache.Get<bool>(StringConst.IS_SUPER_TOKEN))
             {
                 context.Result = new ContentResult()
                 {
@@ -39,7 +39,7 @@ namespace Quartz.NET.Web.Filters
                         status =false,
                         msg = "普通帐号不能进行此操作！可通过appsettings.json节点superToken获取管理员帐号。"
                     }),
-                    ContentType = "application/json",
+                    ContentType = StringConst.JSON_CONTENT_TYPE,
                     StatusCode = (int)HttpStatusCode.OK
                 };
             }

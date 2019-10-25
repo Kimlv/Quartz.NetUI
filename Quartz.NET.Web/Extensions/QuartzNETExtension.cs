@@ -45,6 +45,7 @@ namespace Quartz.NET.Web.Extensions
             TaskOptions options = null;
             try
             {
+                //TODO:从数据库获取任务列表
                 _taskList = JsonConvert.DeserializeObject<List<TaskOptions>>(jobConfig);
                 _taskList.ForEach(x =>
                 {
@@ -125,10 +126,12 @@ namespace Quartz.NET.Web.Extensions
         {
             try
             {
+                //元组用于验证CRON表达式是否正确
                 (bool, string) validExpression = taskOptions.Interval.IsValidExpression();
                 if (!validExpression.Item1)
                     return new { status = false, msg = validExpression.Item2 };
 
+                //元组用于验证作业是否已经存在
                 (bool, object) result = taskOptions.Exists(init);
                 if (!result.Item1)
                     return result.Item2;
@@ -139,8 +142,8 @@ namespace Quartz.NET.Web.Extensions
                 }
 
                 IJobDetail job = JobBuilder.Create<HttpResultful>()
-               .WithIdentity(taskOptions.TaskName, taskOptions.GroupName)
-              .Build();
+                   .WithIdentity(taskOptions.TaskName, taskOptions.GroupName)                   
+                   .Build();
                 ITrigger trigger = TriggerBuilder.Create()
                    .WithIdentity(taskOptions.TaskName, taskOptions.GroupName)
                    .StartNow().WithDescription(taskOptions.Describe)
@@ -155,8 +158,10 @@ namespace Quartz.NET.Web.Extensions
                 else
                 {
                     await schedulerFactory.Pause(taskOptions);
+                    //TODO:更新日志
                     FileQuartz.WriteStartLog($"作业:{taskOptions.TaskName},分组:{taskOptions.GroupName},新建时未启动原因,状态为:{taskOptions.Status}");
                 }
+                //TODO:更新动作日志
                 if (!init)
                     FileQuartz.WriteJobAction(JobAction.新增, taskOptions.TaskName, taskOptions.GroupName);
             }
@@ -271,7 +276,7 @@ namespace Quartz.NET.Web.Extensions
             }
             //生成配置文件
             FileQuartz.WriteJobConfig(_taskList);
-            FileQuartz.WriteJobAction(action, taskOptions.TaskName, taskOptions.GroupName, "操作对象："+JsonConvert.SerializeObject(taskOptions));
+            FileQuartz.WriteJobAction(action, taskOptions.TaskName, taskOptions.GroupName, "操作对象：" + JsonConvert.SerializeObject(taskOptions));
             return result;
         }
 

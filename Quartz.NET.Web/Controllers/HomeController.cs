@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Quartz.NET.Web.Database;
 using Quartz.NET.Web.Extensions;
 using System;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -16,10 +16,12 @@ namespace Quartz.NET.Web.Controllers
     {
         private IConfiguration _configuration { get; set; }
         private IMemoryCache _memoryCache { get; set; }
-        public HomeController(IConfiguration configuration, IMemoryCache memoryCache)
+        private JobContext _context;
+        public HomeController(IConfiguration configuration, IMemoryCache memoryCache, JobContext context)
         {
             this._configuration = configuration;
             this._memoryCache = memoryCache;
+            this._context = context;
         }
         [AllowAnonymous]
         public IActionResult Index()
@@ -42,7 +44,7 @@ namespace Quartz.NET.Web.Controllers
         }
 
         /// <summary>
-        /// 登陆
+        /// 登录
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
@@ -58,7 +60,6 @@ namespace Quartz.NET.Web.Controllers
                 _memoryCache.Set("isSuperToken", token == superToken);
                 ClaimsIdentity claimIdentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                 claimIdentity.AddClaim(new Claim("token", token));
-                //claimIdentity.AddClaim(new Claim("superToken", _configuration["superToken"]?.ToString()));
                 await HttpContext.SignInAsync(new ClaimsPrincipal(claimIdentity), new AuthenticationProperties()
                 {
                     ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60)

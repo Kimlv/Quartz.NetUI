@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Quartz.NET.Web.Constant
+﻿namespace Quartz.NET.Web.Constant
 {
     public class QuartzFileInfo
     {
@@ -11,7 +6,10 @@ namespace Quartz.NET.Web.Constant
         /// 所有任务相关存放的文件夹默认生成在当前项目类库同级(子文件夹包括：日志,作业配置)
         /// </summary>
         public static string QuartzSettingsFolder = "QuartzSettings";
-        //所有作业配置存储文件
+
+        /// <summary>
+        /// 所有作业配置存储文件
+        /// </summary>
         public static string JobConfigFileName = "job_options.json";
 
         /// <summary>

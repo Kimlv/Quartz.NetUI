@@ -55,6 +55,7 @@
                 <span> 后台任务列表</span>
             </div>
             <i-button type="info" icon="md-add" @@click="add">新建任务</i-button>
+            <i-button type="primary" icon="md-open" @@click="copy">复制任务</i-button>
             <i-button type="success" @@click="tiggerAction('pause')" icon="ios-power">暂停任务</i-button>
             <i-button type="warning" @@click="tiggerAction('start')" icon="md-arrow-dropright">开启任务</i-button>
             <i-button type="primary" @@click="tiggerAction('run')" icon="md-open">立即执行</i-button>
@@ -62,7 +63,7 @@
             <i-button icon="md-close" @@click="tiggerAction('remove')">删除任务</i-button>
             <i-button type="info" icon="md-refresh" @@click="refresh(false)">刷新数据</i-button>
         </div>
-        <i-table border ref="selection" @@on-select="selectRow" :columns="columns" :data="rows">
+        <i-table border ref="selection" @@on-select="selectRow" :columns="getColumns()" :data="rows">
         </i-table>
     </div>
 </div>
