@@ -46,7 +46,16 @@ namespace Quartz.NET.Web
             {
                 option.UseSqlServer(Configuration.GetConnectionString("SqlserverConnectionString"));
             });
-            
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
 
             services.AddMvc()
             .AddJsonOptions(options =>
@@ -96,6 +105,7 @@ namespace Quartz.NET.Web
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
+            app.UseCors("CorsPolicy");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

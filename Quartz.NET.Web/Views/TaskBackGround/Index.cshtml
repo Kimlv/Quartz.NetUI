@@ -36,8 +36,11 @@
             <i-form ref="formValidate" :label-width="120" v-bind:model="taskValidate" v-bind:rules="ruleValidate">
                 <form-item v-for="item in taskForm" v-bind:label="item.text+'：'" v-bind:prop="item.name">
                     <i-input v-if="item.type=='textarea'" v-model="taskValidate[item.name]" type="textarea"></i-input>
-                    <i-select v-else-if="item.type=='select'" v-model="taskValidate[item.name]" style="width:378px">
+                    <i-select v-else-if="item.name=='requestType'" v-model="taskValidate[item.name]" style="width:378px">
                         <i-option v-for="item in selectCom.data" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                    </i-select>
+                    <i-select v-else-if="item.name=='previewType'" v-model="taskValidate[item.name]" style="width:378px">
+                        <i-option v-for="item in selectPreview.data" :value="item.value" :key="item.value">{{ item.label }}</i-option>
                     </i-select>
                     <i-input v-else v-model="taskValidate[item.name]" v-bind:class="{'read-only':item.readOnly}" v-bind:placeholder="item.placeholder"></i-input>
                 </form-item>

@@ -4,15 +4,17 @@
 }
 <html lang="en">
 <head>
-    <title>定时任务UI</title>
-    @*<link href="~/iView/iview.css" rel="stylesheet" />*@
+    <title>模型预览</title>
     <link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css">
     <link href="~/element-ui/index.css" rel="stylesheet" />
     <link href="~/css/task_index.css" rel="stylesheet" />
+    <link href="~/css/mycss.css" rel="stylesheet" />
     <script src="~/vue/vue.js"></script>
     <script src="~/element-ui/index.js"></script>
     <script src="~/vue/axios.min.js"></script>
     <script src="~/iView/iview.min.js"></script>
+    
+
     <style>
         [v-cloak] {
             display: none;
@@ -22,9 +24,9 @@
 <body>
 
     <div id="header-container" class="task-header" v-cloak>
-        <div class="img">  <img src="~/images/favicon.png" /></div>
+        <div class="img">  <img style="margin-left:-40px;" src="~/images/bimface.png" /></div>
         <div class="txt">
-            Quartz.Net后台任务调度
+            BIMFACE DEMO 示例
         </div>
         <div class="fun">
             <ul>
@@ -40,7 +42,7 @@
         el: "#header-container",
         data: {
             activedIndex: -1,
-            links: [{ text: '后台任务', url: '/' }, { text: '示例', url: '/ViewModel/Index' },{ text: '指南', url: '/Home/Guide' }, { text: '帮助', url: '/Home/Help' }, { text: '安全退出', url: '/Home/SignOut' }]
+            links: [{ text: '后台任务', url: '/' }, { text: '指南', url: '/Home/Guide' }, { text: '帮助', url: '/Home/Help' }, { text: '安全退出', url: '/Home/SignOut' }]
         }, methods: {
         }, created: function () {
         }

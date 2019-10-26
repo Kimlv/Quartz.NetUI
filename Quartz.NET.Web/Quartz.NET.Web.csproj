@@ -30,4 +30,10 @@
     <Folder Include="wwwroot\images\example\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Shared\View.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

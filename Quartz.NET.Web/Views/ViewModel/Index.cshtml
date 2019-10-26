@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewData["Title"] = "ModelViewTokenList";
+    Layout = "~/Views/Shared/View.cshtml";
+    List<ViewTokens> viewTokens = Model;
+    int index = 0;
+    int current = 0;
+    string style = string.Empty;
+}
+
+<table class="table table-hover" style="font-family:auto;">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Model Id</th>
+            <th>Model Name</th>
+            <th>Desc</th>
+            <th>View Token</th>
+            <th>Preview Type</th>
+            <th>Access Url</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in viewTokens)
+        {
+            current = index % 5;
+            switch (current)
+            {
+                case 0:
+                    style = "success";
+                    break;
+                case 1:
+                    style = "info";
+                    break;
+                case 2:
+                    style = "warning";
+                    break;
+                case 3:
+                    style = "danger";
+                    break;
+                default:
+                    style = "active";
+                    break;
+            }
+            <tr class="@style">
+                <td>@item.Id</td>
+                <td>@item.ModelId</td>
+                <td style="font-family:sans-serif">@item.ModelName</td>
+                <td style="font-family:sans-serif">@item.Desc</td>
+                <td>@item.ViewToken</td>
+
+                @if (item.IsDemo)
+                {
+                    <td>demo</td>
+                }
+                else
+                {
+                    <td>preview</td>
+                }
+                @if (item.IsDemo)
+                {
+                    //TODO:如果是示例demo，文件名称不能写死
+                    <td><a target="_blank" href=@string.Format("http://10.1.73.35:8222/areatext.html?viewToken={0}",item.ViewToken)>Visit</a></td>
+                }
+                else
+                {
+                    //TODO:文件名固定为Preview
+                    <td><a target="_blank" class="button" href=@string.Format("http://10.1.73.35:8222/preview.html?viewToken={0}",item.ViewToken)>Visit</a></td>
+                }
+            </tr>
+            index++;
+        }
+    </tbody>
+</table>
+<div id="example" style="text-align: center">
+    <ul id="pageLimit"></ul>
+</div>
+
+<script>
+    $('#pageLimit').bootstrapPaginator({
+        currentPage: 1,//当前页。
+        totalPages: 20,//总页数。
+        size: "normal",//应该是页眉的大小。
+        bootstrapMajorVersion: 3,//bootstrap的版本要求。
+        alignment: "right",
+        numberOfPages: 5,//显示的页数
+        itemTexts: function (type, page, current) {//如下的代码是将页眉显示的中文显示我们自定义的中文。
+            switch (type) {
+                case "first": return "首页";
+                case "prev": return "上一页";
+                case "next": return "下一页";
+                case "last": return "末页";
+                case "page": return page;
+            }
+        },
+        onPageClicked: function (event, originalEvent, type, page) {//给每个页眉绑定一个事件，其实就是ajax请求，其中page变量为当前点击的页上的数字。
+            $.ajax({
+                url: '',
+                type: '',
+                data: {},
+                dataType: 'JSON',
+                success: function (callback) {
+
+                }
+            })
+        }
+    });
+</script>

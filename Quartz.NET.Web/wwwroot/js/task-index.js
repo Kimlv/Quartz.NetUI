@@ -10,6 +10,10 @@ var $taskVue = new Vue({
             model: 'post',
             data: [{ value: 'post', label: 'post' }, { value: 'get', label: 'get' }]
         },
+        selectPreview: {
+            model: 'preview',
+            data: [{ value: 'preview', label: 'preview' }, { value: 'demo', label: 'demo' }]
+        },
         log: {
             index: 0,
             model: false,
@@ -29,13 +33,14 @@ var $taskVue = new Vue({
         activedIndex: 0,
         taskValidate: {
             id: '', taskName: '', groupName: '', interval: '', apiUrl: '', authKey: '', authValue:
-                '', describe: '', requestType: ''
+                '', jobdescribe: '', describe: '', requestType: '',previewType:''
         },
         ruleValidate: {
             taskName: [{ required: true, message: '作业名称必填', trigger: 'blur' }],
             groupName: [{ required: true, message: '分组名称必填', trigger: 'blur' }],
             interval: [{ required: true, message: '间隔(Cron)必填', trigger: 'blur' }],
             requestType: [{ required: true, message: '请选择请求方式', trigger: 'change' }],
+            previewType: [{ required: true, message: '请选择请求方式', trigger: 'change' }],
             apiUrl: [{ required: true, message: 'ApiUrl必填', trigger: 'blur' }]
         },
         taskForm: [
@@ -46,7 +51,9 @@ var $taskVue = new Vue({
             { name: 'authKey', text: 'header(key)', value: '', placeholder: '请求header验证的Key' },
             { name: 'authValue', text: 'header(value)', value: '', placeholder: '请求header验证的Key' },
             { name: 'requestType', text: '请求方式', value: '', placeholder: 'post/get', type: 'select' },
-            { name: 'describe', text: '描述', value: '', type: 'textarea' }
+            { name: 'describe', text: '模型描述', value: '', placeholder: '如模拟水流效果' },
+            { name: 'previewType', text: '预览方式', value: '', type: 'select', placeholder: 'preview/demo'},
+            { name: 'jobdescribe', text: '作业描述', value: '', type: 'textarea' }
         ],
         columns: [
             {

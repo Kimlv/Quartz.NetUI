@@ -74,7 +74,18 @@ namespace Quartz.NET.Web.Utility
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine($"parameter {parameter} isNew:{isNew}");
                 Console.ResetColor();
-                viewToken = viewToken ?? new ViewTokens { Id = Guid.NewGuid().ToString(), ModelId = parameter, UpdateTime = DateTime.Now, Type = modelTypeEnum, ModelName = taskOptions.TaskName, IsActive = true };
+                viewToken = viewToken ?? new ViewTokens
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ModelId = parameter,
+                    UpdateTime = DateTime.Now,
+                    Type = modelTypeEnum,
+                    ModelName = taskOptions.TaskName,
+                    IsActive = true,
+                    IsDemo = taskOptions.PreviewType != "preview" ? true : false,
+                    JobDesc = taskOptions.JobDescribe,
+                    Desc = taskOptions.Describe
+                };
                 viewToken.UpdateTime = DateTime.Now;
                 viewToken.ViewToken = response.Data;
                 var res = isNew == true ? JobContext.ViewTokens.Add(viewToken) : JobContext.ViewTokens.Update(viewToken);

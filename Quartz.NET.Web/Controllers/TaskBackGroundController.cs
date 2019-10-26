@@ -34,16 +34,16 @@ namespace Quartz.NET.Web.Controllers
         public async Task<IActionResult> GetJobs()
         {
             //TODO:从数据库中获取作业列表
-            List<TaskOptions> options =  _context.Set<TaskOptions>().ToList();
+            //List<TaskOptions> options =  _context.Set<TaskOptions>().ToList();
             return Json(await _schedulerFactory.GetJobs());
         }
 
         public IActionResult GetJobList()
         {
             //TODO:从数据库中获取作业列表
-            List<TaskOptions> options = _context.Set<TaskOptions>().ToList();
+            //List<TaskOptions> options = _context.Set<TaskOptions>().ToList();
             //return Json(await _schedulerFactory.GetJobs());
-            return Json(options);
+            return Json(null);
         }
 
         /// <summary>
