@@ -61,12 +61,12 @@
                 @if (item.IsDemo)
                 {
                     //TODO:如果是示例demo，文件名称不能写死
-                    <td><a target="_blank" href=@string.Format("http://10.1.73.35:8222/areatext.html?viewToken={0}",item.ViewToken)>Visit</a></td>
+                    <td><a target="_blank" href=@string.Format("http://{1}:8222/areatext.html?viewToken={0}",item.ViewToken,ViewBag.Ip)>Visit</a></td>
                 }
                 else
                 {
                     //TODO:文件名固定为Preview
-                    <td><a target="_blank" class="button" href=@string.Format("http://10.1.73.35:8222/preview.html?viewToken={0}",item.ViewToken)>Visit</a></td>
+                    <td><a target="_blank" class="button" href=@string.Format("http://{1}:8222/preview.html?viewToken={0}",item.ViewToken,ViewBag.Ip)>Visit</a></td>
                 }
             </tr>
             index++;

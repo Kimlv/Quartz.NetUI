@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quartz.NET.Web.Database;
 using Quartz.NET.Web.Models;
+using Quartz.NET.Web.Utility;
 
 namespace Quartz.NET.Web.Controllers
 {
@@ -21,7 +22,8 @@ namespace Quartz.NET.Web.Controllers
         //获取模型当前的ViewToken
         public IActionResult Index(int? type ,int pageSize = 20 , int pageIndex = 1)
         {
-
+            var ip = NetWork.GetInternalIP();
+            ViewBag.Ip = ip.ToString();
             int? _type = type == null ? 2 : type;
             List<ViewTokens> viewTokens = null;
             int? pageTotal = jobContext.Set<ViewTokens>()?.Count(item => item.IsActive);
