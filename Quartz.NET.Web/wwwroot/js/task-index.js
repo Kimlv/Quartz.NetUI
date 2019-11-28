@@ -33,7 +33,7 @@ var $taskVue = new Vue({
         activedIndex: 0,
         taskValidate: {
             id: '', taskName: '', groupName: '', interval: '', apiUrl: '', authKey: '', authValue:
-                '', jobdescribe: '', describe: '', requestType: '',previewType:''
+                '', jobdescribe: '', describe: '', requestType: '',previewType:'',filePath:''
         },
         ruleValidate: {
             taskName: [{ required: true, message: '作业名称必填', trigger: 'blur' }],
@@ -52,7 +52,25 @@ var $taskVue = new Vue({
             { name: 'authValue', text: 'header(value)', value: '', placeholder: '请求header验证的Key' },
             { name: 'requestType', text: '请求方式', value: '', placeholder: 'post/get', type: 'select' },
             { name: 'describe', text: '模型描述', value: '', placeholder: '如模拟水流效果' },
-            { name: 'previewType', text: '预览方式', value: '', type: 'select', placeholder: 'preview/demo'},
+            {
+                name: 'previewType', text: '预览方式', value: '', type: 'select', placeholder: 'preview/demo', onChange: (data, value) => {
+                    console.log("data", data);
+                    console.log("value", value);
+                    $taskVue.taskForm.forEach(x => {
+                        if (x.name === "filePath") {
+                            if (data === 'preview') {
+                                console.log("x.name", x.name);
+                                x.readOnly = true;
+                            } else {
+                                console.log("x.name", x.name);
+                                x.readOnly = true;
+                            }
+                            
+                        }
+                    });
+                }
+            },
+            { name: 'filePath', text: '文件地址', value: '', placeholder: 'bimface/demo.html' },
             { name: 'jobdescribe', text: '作业描述', value: '', type: 'textarea' }
         ],
         columns: [
@@ -200,6 +218,11 @@ var $taskVue = new Vue({
         ],
         rows: []
     }, methods: {
+        onChange(item, value) {
+            if (item.onChange && typeof item.onChange === "function") {
+                item.onChange(value, item);
+            }
+        },
         getColumns: function () {
             var columns = [];
             this.columns.forEach(function (item) {
@@ -259,6 +282,7 @@ var $taskVue = new Vue({
                 this.taskValidate[key] = '';
             }
             this.setFormClass(false);
+            //this.isDemo(this.previewType);
             this.model = true;
         },
         copy: function () {
@@ -314,6 +338,15 @@ var $taskVue = new Vue({
                 });
             });
 
+        },
+        isDemo: function (previewType) {
+            console.log("previewType", previewType);
+            if (previewType === "preview") {
+                this.taskValidate["filePath"].readOnly = true;
+                this.$refs.filePath.readOnly = true;
+                //document.getElementById('filePath').readOnly = true;
+            }
+            
         },
         setFormClass: function (readOnly) {
             this.isAdd = !readOnly;
